@@ -27,6 +27,32 @@
       return arr;
     }
 
+    function setGame(t1, t2){
+      for (a = 0; a < param.x; a++) {
+        for (b = 0; b <= param.y; b++) {
+          var nameDiv = a.toString() + b.toString();
+          $('#grid').append("<div id='n" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:white;border-radius:50px;'></div>");
+          $('#grid').append("<div id='r" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:red;border-radius:50px;'></div>");
+          $('#grid').append("<div id='y" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:yellow;border-radius:50px;'></div>");
+          $('#n' + nameDiv + '').click(animation);
+          $('#r' + nameDiv + '').click(animation).hide();
+          $('#y' + nameDiv + '').click(animation).hide();
+          t1 = t1 + 70;
+        }
+        t1 = 20;
+        t2 = t2 + 70;
+      }
+    }
+    function resetGame(){
+      for (a = 0; a < param.x; a++) {
+        for (b = 0; b <= param.y; b++) {
+          var nameDiv = a.toString() + b.toString();
+          $('#r' + nameDiv + '').hide();
+          $('#y' + nameDiv + '').hide();
+        }
+      }
+    }
+
     function animation(e) {
       var numberX = e.target.id.substr(1, 1);
       var numberY = e.target.id.substr(2, 1);
@@ -102,7 +128,7 @@
       var row = game.map(x => x[y]);
 
       if (count(y, col) == 4 || count(x, row) == 4) {
-        $('.win').append("<h3>Victoire joueur " + player + "!</h3>");
+        $('.win').append("<h3>Victoire joueur " + player + " !</h3>");
         $('#player1').css({
           backgroundColor: 'white'
         });
@@ -158,7 +184,7 @@
       }
       else if (turn) {
         $('#player1').css({
-          backgroundColor: 'red'
+          backgroundColor: '#FF0040'
         });
         $('#player2').css({
           backgroundColor: 'white'
@@ -169,7 +195,7 @@
           backgroundColor: 'white'
         });
         $('#player2').css({
-          backgroundColor: 'yellow'
+          backgroundColor: '#FBE871'
         });
       }
     }
@@ -207,49 +233,69 @@
       var h = (70 * param.y) + (t1 * 3);
       var w = (70 * param.x) + (t2 * 4.2);
 
-      $(this).append("<div class='players'><div id='player1'><h3>Joueur 1</h3></div><div id='player2'><h3>Joueur 2</h3></div></div>");
-      $('.players').append("<div class='win' style='margin:10px;font-family:arial;color:blue;'></div>");
-
       $(this).append("<div id='grid' style='position:absolute;height:" + h + "px;width:" + w + "px;left:300px;top:200px;background-color:blue;border-radius:20px;'></div>");
+      $(this).append("<div id='monitor'></div>");
+      $('#monitor').append("<div class='players'><div id='player1'><h3>Joueur 1</h3></div><div id='player2'><h3>Joueur 2</h3></div></div>");
+      $('#monitor').append("<div class='win' style='margin:10px;font-family:arial;color:#2E2EFE;'></div>");
+      $('.players').append("<button class='btn' type='button'>Rejouer</button>");
+      $('.btn').click(resetGame);
 
-      for (a = 0; a < param.x; a++) {
-        for (b = 0; b <= param.y; b++) {
-          var nameDiv = a.toString() + b.toString();
-          $('#grid').append("<div id='n" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:white;border-radius:50px;'></div>");
-          $('#grid').append("<div id='r" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:red;border-radius:50px;'></div>");
-          $('#grid').append("<div id='y" + nameDiv + "' style='position:absolute;height:70px;width:70px;left:" + t2 * 1.1 + "px;top:" + ((t1 * 1.1) - 95) + "px;background-color:yellow;border-radius:50px;'></div>");
-          $('#n' + nameDiv + '').click(animation);
-          $('#r' + nameDiv + '').click(animation).hide();
-          $('#y' + nameDiv + '').click(animation).hide();
-          t1 = t1 + 70;
-        }
-        t1 = 20;
-        t2 = t2 + 70;
-      }
+      setGame(t1, t2);
 
-      $('.players').css({
+      $('#monitor').css({
+        position: 'absolute',
+        left: '900px',
+        top: '200px',
         'margin-left': '40px',
-        'width': '500px',
+        'width': '300px',
         'display': 'flex',
-        'flex-direction': 'row',
+        'flex-direction': 'column',
         'text-align': 'center',
+        'background-color': '#58D3F7',
+        'border-radius': '10px',
+      })
+      $('.players').css({
+        'width': 'auto',
+        'display': 'block',
+        'text-align': 'center',
+        margin: '30px',
       })
       $('#player1').css({
-        backgroundColor: 'red',
-        width: '100px',
-        display: 'block',
+        backgroundColor: '#FF0040',
+        width: 'auto',
+        display: 'inline-block',
         'font-family': 'arial',
-        border: '2px solid black',
+        border: '3px solid #B40431',
+        color: '#610B21',
         'border-radius': '10px',
-        margin: '10px',
+        'margin-right': '20px',
+        'margin-bottom': '20px',
+        'padding-left': '10px',
+        'padding-right': '10px',
       });
       $('#player2').css({
-        width: '100px',
-        display: 'block',
+        width: 'auto',
+        display: 'inline-block',
+        'font-family': 'arial',
+        border: '3px solid #D49E00',
+        color: '#765901',
+        'border-radius': '10px',
+        'margin-bottom': '20px',
+        'background-color': 'white',
+        'padding-left': '10px',
+        'padding-right': '10px',
+      });
+      $('.btn').css({
         'font-family': 'arial',
         border: '2px solid black',
         'border-radius': '10px',
-        margin: '10px',
+        border: '3px solid #045FB4',
+        color: '#045FB4',
+        padding: '15px 32px',
+        'text-align': 'center',
+        display: 'inline-block',
+        'font-size': '18px',
+        backgroundColor: '#CEE3F6',
       });
     });
   };
