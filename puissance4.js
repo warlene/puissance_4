@@ -51,6 +51,17 @@
           $('#y' + nameDiv + '').hide();
         }
       }
+      game = setArray(param.x, param.y + 1, 0);
+      // console.log(game);
+      for (a = 0; a < param.x; a++) {
+        for (b = 0; b <= param.y; b++) {
+          var nameDiv = a.toString() + b.toString();
+          $('#n'+nameDiv+'').on('click');
+          $('#r'+nameDiv+'').on('click');
+          $('#y'+nameDiv+'').on('click');
+        }
+      }
+
     }
 
     function animation(e) {
@@ -78,11 +89,11 @@
       var currentCoord = insertToArray(turn, numberX, game);
       var win = searchVictory(currentCoord, game);
       changeColorPlayer(turn, win);
+      // countDiago(game);
     }
 
     function changeState() {
       return turn = !turn;
-      // return state_p1 = state_p1 == 0 ? 1 : 0;
     }
 
     function location(numberX, game) {
@@ -126,8 +137,25 @@
 
       var col = Array.from(game[x]);
       var row = game.map(x => x[y]);
-
-      if (count(y, col) == 4 || count(x, row) == 4) {
+      var diagoDown = diagonaleDown(x,y,game,player);
+      var diagoUp = diagonaleUp(x,y,game,player);
+      // console.log(diagoUp);
+      // console.log(diagoDown);
+      var arrNumb = new Array;
+      var yb = param.y;
+      for(i=0;i<=param.y;i++){
+        arrNumb[i] = yb;
+        yb--;
+      }
+      if (count(y, col) == 4 || count(x, row) == 4 || count(x, diagoDown) == 4 || count(arrNumb[y], diagoUp) == 4) {
+        if(player == 1){
+          p1_win++;
+        }
+        else{
+          p2_win++;
+        }
+        $('#winp1').html(p1_win);
+        $('#winp2').html(p2_win);
         $('.win').append("<h3>Victoire joueur " + player + " !</h3>");
         $('#player1').css({
           backgroundColor: 'white'
@@ -148,6 +176,62 @@
       else{
         return false;
       }
+    }
+
+    function diagonaleDown(x,y,game,player){
+      var arrUp = new Array;
+      for(i=1; i<=param.x; i++){
+        var r = x-i;
+        var t = y-i;
+        if(r>=0 && t>0){
+          arrUp.push(game[r][t]);
+        }
+        if(r<0 || t<0){
+          break;
+        }
+      }
+      var arrDown = arrUp.reverse();
+      arrDown.push(player);
+
+      for(i=1; i<=param.x; i++){
+        var r = x+i;
+        var t = y+i;
+        if(r<param.x && t<=param.y){
+          arrDown.push(game[r][t]);
+        }
+        if(r>param.x || t>param.y){
+          break;
+        }
+      }
+      return arrDown;
+    }
+
+    function diagonaleUp(x,y,game,player){
+      var arrDown = new Array;
+      for(i=1; i<=param.x; i++){
+        var r = x-i;
+        var t = y+i;
+        if(r>=0 && t<=param.y){
+          arrDown.push(game[r][t]);
+        }
+        if(r<0 || t>param.y){
+          break;
+        }
+      }
+      var arrUp = arrDown.reverse();
+      arrUp.push(player);
+
+      for(i=1; i<=param.x; i++){
+        var r = x+i;
+        var t = y-i;
+        if(r<param.x && t>0){
+          arrUp.push(game[r][t]);
+        }
+        if(r>param.x || t<=0){
+          break;
+        }
+      }
+      return arrUp;
     }
 
     function count(pos, array) {
@@ -236,8 +320,9 @@
       $(this).append("<div id='grid' style='position:absolute;height:" + h + "px;width:" + w + "px;left:300px;top:200px;background-color:blue;border-radius:20px;'></div>");
       $(this).append("<div id='monitor'></div>");
       $('#monitor').append("<div class='players'><div id='player1'><h3>Joueur 1</h3></div><div id='player2'><h3>Joueur 2</h3></div></div>");
+      $('#monitor').append("<div class='wins'><div id='winp1'>0</div><div id='winp2'>0</div></div>");
       $('#monitor').append("<div class='win' style='margin:10px;font-family:arial;color:#2E2EFE;'></div>");
-      $('.players').append("<button class='btn' type='button'>Rejouer</button>");
+      $('#monitor').append("<button class='btn' type='button'>Rejouer</button>");
       $('.btn').click(resetGame);
 
       setGame(t1, t2);
@@ -258,7 +343,13 @@
         'width': 'auto',
         'display': 'block',
         'text-align': 'center',
-        margin: '30px',
+        'margin-top': '30px',
+      })
+      $('.wins').css({
+        'width': 'auto',
+        'display': 'block',
+        'text-align': 'center',
+        // margin: '30px',
       })
       $('#player1').css({
         backgroundColor: '#FF0040',
@@ -269,7 +360,6 @@
         color: '#610B21',
         'border-radius': '10px',
         'margin-right': '20px',
-        'margin-bottom': '20px',
         'padding-left': '10px',
         'padding-right': '10px',
       });
@@ -280,21 +370,46 @@
         border: '3px solid #D49E00',
         color: '#765901',
         'border-radius': '10px',
-        'margin-bottom': '20px',
         'background-color': 'white',
+        'padding-left': '10px',
+        'padding-right': '10px',
+      });
+      $('#winp1').css({
+        // backgroundColor: '#FF0040',
+        width: 'auto',
+        display: 'inline-block',
+        'font-family': 'arial',
+        // border: '3px solid #B40431',
+        // color: '#610B21',
+        'border-radius': '10px',
+        'margin-left': '20px',
+        'margin-right': '20px',
+        'margin-bottom': '20px',
+        'padding-left': '10px',
+        'padding-right': '10px',
+      });
+      $('#winp2').css({
+        // backgroundColor: '#FF0040',
+        width: 'auto',
+        display: 'inline-block',
+        'font-family': 'arial',
+        // border: '3px solid #B40431',
+        // color: '#610B21',
+        'border-radius': '10px',
+        'margin-right': '20px',
+        'margin-bottom': '20px',
         'padding-left': '10px',
         'padding-right': '10px',
       });
       $('.btn').css({
         'font-family': 'arial',
-        border: '2px solid black',
+        'font-size': '18px',
         'border-radius': '10px',
         border: '3px solid #045FB4',
         color: '#045FB4',
         padding: '15px 32px',
         'text-align': 'center',
         display: 'inline-block',
-        'font-size': '18px',
         backgroundColor: '#CEE3F6',
       });
     });
