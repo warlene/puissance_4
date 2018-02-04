@@ -133,8 +133,8 @@
 
       var col = Array.from(game[x]);
       var row = game.map(x => x[y]);
-      var diagoDown = diagonaleDown(x,y,game,player);
-      var diagoUp = diagonaleUp(x,y,game,player);
+      var [posDown, diagoDown] = diagonaleDown(x,y,game,player);
+      var [posUp, diagoUp] = diagonaleUp(x,y,game,player);
       // console.log(diagoUp);
       // console.log(diagoDown);
       var arrNumb = new Array;
@@ -143,7 +143,7 @@
         arrNumb[i] = yb;
         yb--;
       }
-      if (count(y, col) == 4 || count(x, row) == 4 || count(x, diagoDown) == 4 || count(arrNumb[y], diagoUp) == 4) {
+      if (count(y, col) >= 4 || count(x, row) >= 4 || count(posDown, diagoDown) >= 4 || count(posUp, diagoUp) >= 4) {
         if(player == 1){
           p1_win++;
         }
@@ -187,6 +187,8 @@
         }
       }
       var arrDown = arrUp.reverse();
+      const pos = arrDown.length;
+
       arrDown.push(player);
 
       for(i=1; i<=param.x; i++){
@@ -199,7 +201,7 @@
           break;
         }
       }
-      return arrDown;
+      return [pos, arrDown];
     }
 
     function diagonaleUp(x,y,game,player){
@@ -215,6 +217,8 @@
         }
       }
       var arrUp = arrDown.reverse();
+      const pos = arrUp.length;
+
       arrUp.push(player);
 
       for(i=1; i<=param.x; i++){
@@ -227,7 +231,7 @@
           break;
         }
       }
-      return arrUp;
+      return [pos, arrUp];
     }
 
     function count(pos, array) {
