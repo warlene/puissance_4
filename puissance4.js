@@ -52,16 +52,13 @@
         }
       }
       game = setArray(param.x, param.y + 1, 0);
-      // console.log(game);
+      $('.win').remove();
       for (a = 0; a < param.x; a++) {
         for (b = 0; b <= param.y; b++) {
           var nameDiv = a.toString() + b.toString();
-          $('#n'+nameDiv+'').on('click');
-          $('#r'+nameDiv+'').on('click');
-          $('#y'+nameDiv+'').on('click');
+          // $('#n' + nameDiv + '').click(animation);
         }
       }
-
     }
 
     function animation(e) {
@@ -89,7 +86,6 @@
       var currentCoord = insertToArray(turn, numberX, game);
       var win = searchVictory(currentCoord, game);
       changeColorPlayer(turn, win);
-      // countDiago(game);
     }
 
     function changeState() {
@@ -283,33 +279,6 @@
         });
       }
     }
-
-    // //      if(game[x][y] == 1){
-    //         for (i = x; i < x+4; i++) {
-    //           if(game[i][y] == player){
-    //             totalD++;
-    //           }
-    //           else{
-    //             return totalD;
-    //           }
-    //         }
-    //         if(totalD == 4){
-    //           console.log("victoire player1");
-    //         }
-    //
-    //         for (i = x; i < x-4; i--) {
-    //           if(game[i][y] == player){
-    //             totalG++;
-    //           }
-    //           else{
-    //             return totalG;
-    //           }
-    //         }
-    //         if(totalG == 4){
-    //           console.log("victoire player1");
-    //         }
-    //       //}
-    //     }
 
     return this.each(function() {
       var t1 = 20;
